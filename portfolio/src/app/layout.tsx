@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
-import StarsCanvas from '../models/Stars';
+import Background from "@/models/Background";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,12 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="bg-slate-200">
-      <body className={inter.className}>
-      <Navbar></Navbar>
-        <StarsCanvas></StarsCanvas>
-        {children}
-        </body>
+    <html lang="en" className="">
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
