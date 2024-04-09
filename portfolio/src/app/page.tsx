@@ -1,15 +1,16 @@
-"use client";
-import Image from "next/image";
-import Background from "@/models/Background";
-import { Switch } from "@nextui-org/react";
+'use client'
+
+import { Experience } from "@/components/Experience";
+import { Canvas } from "@react-three/fiber";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   return (
-    <div className="relative h-screen w-screen">
-      <Background />
-      <div className="absolute top-0 left-0 z-1">
-        <Switch defaultSelected aria-label="Automatic updates" />
-      </div>
-    </div>
-  );
+    <>
+      <Canvas>
+        <color attach= "background" args={["#ececec"]} />
+        <Experience />
+      </Canvas>
+    </>
+  )
 }
