@@ -3,10 +3,16 @@ import { Float, Line, OrbitControls } from "@react-three/drei";
 import { Background } from "./Background";
 import { Airplane } from "./Airplane";
 import { Cloud } from "./Cloud";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-const LINE_NB_POINTS = 2000;
+const LINE_NB_POINTS = 1000;
+const CURVE_DISTANCE = 250;
+const CURVE_AHEAD_CAMERA = 0.008;
+const CURVE_AHEAD_AIRPLANE = 0.02;
+const AIRPLANE_MAX_ANGLE = 35;
+const FRICTION_DISTANCE = 42;
 
 function renderClouds() {
   return (
@@ -71,13 +77,60 @@ function CurveParams() {
 
 export const Experience = () => {
     const [curve,shape] = CurveParams();
+    const [airplanePosition, setAirplanePosition] = useState(0);
+    const airplane = useRef();
+    const cameraGroup = useRef();
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      switch (event.key) {
+        case "ArrowUp":
+          // Move airplane forward along the curve
+          setAirplanePosition((prevPos) =>
+            Math.min(prevPos + CURVE_AHEAD_AIRPLANE, 1)
+          );
+          break;
+        case "ArrowDown":
+          // Move airplane backward along the curve
+          setAirplanePosition((prevPos) =>
+            Math.max(prevPos - CURVE_AHEAD_AIRPLANE, 0)
+          );
+          break;
+        default:
+          break;
+      }
+    };
+
+    // Add event listener for keydown
+    document.addEventListener("keydown", handleKeyDown);
+
+    // Clean up event listener on component unmount
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []); // Empty dependency array ensures the effect runs only once
+
+  // Update airplane position based on airplanePosition state
+  useFrame((_state, delta) => {
+    // Other animation code...
+
+    const curPoint = curve.getPoint(airplanePosition);
+    airplane.current.position.lerp(curPoint, delta * 24);
+
+    // Other animation code...
+  });
+       
+
   return (
     <>
-      <OrbitControls />
+      <group ref={cameraGroup}>
+      {/* <OrbitControls enableZoom={false}/> */}
       <Background />
+      <group ref={airplane}>
       <Float floatIntensity={2} speed={2}>
         <Airplane rotation-y={Math.PI / 2} scale={[0.2, 0.2, 0.2]} />
       </Float>
+      </group>
       <group position-y={-2}>
         <mesh>
             <extrudeGeometry 
@@ -91,6 +144,7 @@ export const Experience = () => {
         </mesh>
       </group>
       {renderClouds()}
+      </group>
     </>
   );
 };
