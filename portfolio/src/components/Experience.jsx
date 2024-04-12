@@ -1,5 +1,5 @@
 "use client";
-import { Float, Line, OrbitControls } from "@react-three/drei";
+import { Float, Line, OrbitControls, PerspectiveCamera, useScroll } from "@react-three/drei";
 import { Background } from "./Background";
 import { Airplane } from "./Airplane";
 import { Cloud } from "./Cloud";
@@ -59,92 +59,77 @@ function CurveParams() {
     );
   }, []);
 
-
   const linePoints = useMemo(() => {
     return curve.getPoints(LINE_NB_POINTS);
   }, [curve]);
 
-  const shape = useMemo(()=>{
+  const shape = useMemo(() => {
     const shape = new THREE.Shape();
-    shape.moveTo(0,-0.5);
-    shape.lineTo(0,0.2);
+    shape.moveTo(0, -0.5);
+    shape.lineTo(0, 0.2);
     return shape;
-  },[curve]);
+  }, [curve]);
 
-  return [curve,shape];
+  return [curve, shape, linePoints];
 }
 
-
 export const Experience = () => {
-    const [curve,shape] = CurveParams();
-    const [airplanePosition, setAirplanePosition] = useState(0);
-    const airplane = useRef();
-    const cameraGroup = useRef();
+  const [curve, shape, linePoints] = CurveParams();
+  const cameraGroup = useRef();
+  const airplane = useRef();
+  const scroll = useScroll();
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      switch (event.key) {
-        case "ArrowUp":
-          // Move airplane forward along the curve
-          setAirplanePosition((prevPos) =>
-            Math.min(prevPos + CURVE_AHEAD_AIRPLANE, 1)
-          );
-          break;
-        case "ArrowDown":
-          // Move airplane backward along the curve
-          setAirplanePosition((prevPos) =>
-            Math.max(prevPos - CURVE_AHEAD_AIRPLANE, 0)
-          );
-          break;
-        default:
-          break;
-      }
-    };
+  useFrame((_state, delta)=>{
+    const curPointIndex = Math.min(Math.round(scroll.offset*linePoints.length),linePoints.length-1);
+    const curPoint = linePoints[curPointIndex];
 
-    // Add event listener for keydown
-    document.addEventListener("keydown", handleKeyDown);
+    const pointAhead = linePoints[Math.min(curPointIndex+1), linePoints.length-1];
 
-    // Clean up event listener on component unmount
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []); // Empty dependency array ensures the effect runs only once
+    const xDisplacement = (pointAhead.x - curPoint.x)*80;
 
-  // Update airplane position based on airplanePosition state
-  useFrame((_state, delta) => {
-    // Other animation code...
+    const angleRotation = (xDisplacement < 0 ? 1: -1) * Math.min(Math.abs(xDisplacement),Math.PI/3);
 
-    const curPoint = curve.getPoint(airplanePosition);
-    airplane.current.position.lerp(curPoint, delta * 24);
+    const targetAirplaneQuaternion =  new THREE.Quaternion().setFromEuler(
+      new THREE.Euler(
+        airplane.current.rotation.x,
+        airplane.current.rotation.y,
+        angleRotation,
+      )
+    );
 
-    // Other animation code...
-  });
-       
+    airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
+
+    cameraGroup.current.position.lerp(curPoint, delta*24);
+  })
 
   return (
     <>
-      <group ref={cameraGroup}>
       {/* <OrbitControls enableZoom={false}/> */}
-      <Background />
-      <group ref={airplane}>
-      <Float floatIntensity={2} speed={2}>
-        <Airplane rotation-y={Math.PI / 2} scale={[0.2, 0.2, 0.2]} />
-      </Float>
+      <group ref={cameraGroup}>
+        <Background />
+        <PerspectiveCamera position={[0,0,5]} fov={30} makeDefault />
+        <group ref={airplane}>
+        <Float floatIntensity={2} speed={2}>
+          <Airplane rotation-y={Math.PI / 2} scale={[0.2, 0.2, 0.2]} />
+        </Float>
+        </group>
       </group>
       <group position-y={-2}>
         <mesh>
-            <extrudeGeometry 
-                args={[shape,{
-                    steps: LINE_NB_POINTS,
-                    bevelEnabled: false,
-                    extrudePath: curve,
-                }]}
-            />
-            <meshStandardMaterial color={"white"} opacity={0.7} transparent />
+          <extrudeGeometry
+            args={[
+              shape,
+              {
+                steps: LINE_NB_POINTS,
+                bevelEnabled: false,
+                extrudePath: curve,
+              },
+            ]}
+          />
+          <meshStandardMaterial color={"white"} opacity={0.7} transparent />
         </mesh>
       </group>
       {renderClouds()}
-      </group>
     </>
   );
 };
