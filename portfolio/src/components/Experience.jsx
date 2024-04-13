@@ -5,9 +5,10 @@ import { Airplane } from "./Airplane";
 import { Cloud } from "./Cloud";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
+import { CurveUtils } from '../utils/utils'
 import * as THREE from "three";
 
-const LINE_NB_POINTS = 1000;
+const LINE_NB_POINTS = 12000;
 const CURVE_DISTANCE = 250;
 const CURVE_AHEAD_CAMERA = 0.008;
 const CURVE_AHEAD_AIRPLANE = 0.02;
@@ -109,7 +110,7 @@ export const Experience = () => {
         <Background />
         <PerspectiveCamera position={[0,0,5]} fov={30} makeDefault />
         <group ref={airplane}>
-        <Float floatIntensity={2} speed={2}>
+        <Float floatIntensity={1} speed={1.5} rotationIntensity={0.5}>
           <Airplane rotation-y={Math.PI / 2} scale={[0.2, 0.2, 0.2]} />
         </Float>
         </group>
