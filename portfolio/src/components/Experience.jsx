@@ -7,11 +7,10 @@ import {
 } from "@react-three/drei";
 import { Background } from "./Background";
 import { Airplane } from "./Airplane";
-import { Cloud } from "./Cloud";
+import {Text} from 'troika-three-text'
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { CurveUtils } from "../utils/utils";
-import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
 const LINE_NB_POINTS = 10000;
@@ -21,6 +20,13 @@ export const Experience = () => {
   const cameraGroup = useRef();
   const airplane = useRef();
   const scroll = useScroll();
+  const myText = new Text()
+  
+  // Set properties to configure:
+  myText.text = 'Hello world!'
+  myText.fontSize = 0.2
+  myText.position.z = -2
+  myText.color = 0x9966FF  
 
   useFrame((_state, delta) => {
     const curPointIndex = Math.min(
@@ -49,7 +55,6 @@ export const Experience = () => {
 
     cameraGroup.current.position.lerp(curPoint, delta * 24);
   });
-
   return (
     <>
       <group ref={cameraGroup}>
