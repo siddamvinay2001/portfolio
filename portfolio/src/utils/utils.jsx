@@ -206,8 +206,44 @@ export const CurveUtils = () => {
       {
         scale: new Vector3(3, 3, 3),
         position: new Vector3(
+          curvePoints[5].x + 10,
+          curvePoints[5].y - 25,
+          curvePoints[5].z - 20
+        ),
+        rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
+      },
+      {
+        scale: new Vector3(3, 3, 3),
+        position: new Vector3(
+          curvePoints[5].x - 10,
+          curvePoints[5].y + 25,
+          curvePoints[5].z - 20
+        ),
+        rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
+      },
+      {
+        scale: new Vector3(3, 3, 3),
+        position: new Vector3(
           curvePoints[6].x - 5,
           curvePoints[6].y + 2,
+          curvePoints[6].z + 20
+        ),
+        rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
+      },
+      {
+        scale: new Vector3(3, 3, 3),
+        position: new Vector3(
+          curvePoints[6].x - 15,
+          curvePoints[6].y + 12,
+          curvePoints[6].z - 20
+        ),
+        rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
+      },
+      {
+        scale: new Vector3(3, 3, 3),
+        position: new Vector3(
+          curvePoints[6].x + 25,
+          curvePoints[6].y - 12,
           curvePoints[6].z + 20
         ),
         rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),

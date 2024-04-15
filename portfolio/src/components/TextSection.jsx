@@ -48,9 +48,9 @@ export const TextSection = ({ currentState, setCurrentState }) => {
     currentState > -1 ? textConfigs[currentState].description : "";
 
   return (
-    <div className="absolute top-28 left-0 right-0 z-10 flex flex-col items-center  justify-center">
+    <div className="absolute top-20 left-0 max-h-[80%] right-0 z-10 flex flex-col items-center mb-20  justify-center">
       {currentState > -1 && (
-        <div className="text-center py-4 px-8 bg-white max-w-3/5 font-serif text-black rounded-md">
+        <div className="text-center py-4 px-8 overflow-y-auto bg-white max-w-3/5  font-serif text-black rounded-md">
           {title.length > 0 && <div className="text-lg">{title}</div>}
           {description.length > 0 && (
             <div className="text-md text-left mt-3">

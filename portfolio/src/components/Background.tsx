@@ -10,8 +10,9 @@ export const Background = () => {
       <Sphere scale={[100, 100, 100]} rotation-y={Math.PI / 2}>
         <LayerMaterial
           lighting="physical"
-          transmission={1}
+          transmission={0}
           side={THREE.BackSide}
+          reflectivity={0.1}
         >
           <Gradient
             colorA={"#357ca1"}
