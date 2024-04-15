@@ -8,62 +8,61 @@ import {
 import { Euler, Group, Vector3 } from "three";
 import { Background } from "./Background";
 import { Airplane } from "./Airplane";
-import {Text} from 'troika-three-text'
+import { Text } from "troika-three-text";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { CurveUtils } from "../utils/utils";
 import * as THREE from "three";
-import {CustomEffect} from './Effects'
+import { CustomEffect } from "./Effects";
 import { lerp } from "three/src/math/MathUtils.js";
 
-const LINE_NB_POINTS = 1000 ;
+const LINE_NB_POINTS = 1000;
 const CURVE_AHEAD_AIRPLANE = 0.02;
 const CURVE_AHEAD_CAMERA = 0.008;
 const AIRPLANE_MAX_ANGLE = 35;
 
-
-export const Experience = ({curretState,setCurrentState}) => {
+export const Experience = ({ curretState, setCurrentState }) => {
   const [curve, linePoints, shape, renderClouds, renderTexts] = CurveUtils();
   const cameraGroup = useRef();
   const airplane = useRef();
   const scroll = useScroll();
-  const myText = new Text()
+  const myText = new Text();
 
   useFrame((_state, delta) => {
-
-    const scrollOffset = Math.max(0,scroll.offset);
+    const scrollOffset = Math.max(0, scroll.offset);
 
     const curPoint = curve.getPoint(scrollOffset);
     cameraGroup.current.position.lerp(curPoint, delta * 24);
 
-    // console.log("Camergroup position: ", cameraGroup.current.position);
-     console.log("Scroll offset is: ", scrollOffset);
+    console.log("Scroll offset is: ", scrollOffset);
 
-    if(scrollOffset > 0.15 && scrollOffset < 0.16){
+    if (scrollOffset > 0.15 && scrollOffset < 0.16) {
       setCurrentState(1);
-    }
-    else if(scrollOffset > 0.30 && scrollOffset < 0.31){
+    } else if (scrollOffset > 0.3 && scrollOffset < 0.31) {
       setCurrentState(2);
-    }
-    else if(scrollOffset > 0.50 && scrollOffset < 0.51){
+    } else if (scrollOffset > 0.5 && scrollOffset < 0.51) {
       setCurrentState(3);
-    }
-    else if(scrollOffset > 0.70 && scrollOffset < 0.71){
+    } else if (scrollOffset > 0.7 && scrollOffset < 0.71) {
       setCurrentState(4);
-    }
-    else if(scrollOffset > 0.86 && scrollOffset < 0.87){
+    } else if (scrollOffset > 0.86 && scrollOffset < 0.87) {
       setCurrentState(5);
+    } else if (scrollOffset > 0.99) {
+      setCurrentState(6);
     }
 
-    const lookAtPoint = curve.getPoint(Math.min(scrollOffset+CURVE_AHEAD_CAMERA,1));
+    const lookAtPoint = curve.getPoint(
+      Math.min(scrollOffset + CURVE_AHEAD_CAMERA, 1)
+    );
     const currentLookAt = cameraGroup.current.getWorldDirection(
       new THREE.Vector3()
-    )
-    const targetLookAt = new THREE.Vector3().subVectors(curPoint,lookAtPoint).normalize();
+    );
+    const targetLookAt = new THREE.Vector3()
+      .subVectors(curPoint, lookAtPoint)
+      .normalize();
     const lookAt = currentLookAt.lerp(targetLookAt, delta * 24);
     cameraGroup.current.lookAt(
       cameraGroup.current.position.clone().add(lookAt)
-    )
+    );
 
     const tangent = curve.getTangent(scrollOffset + CURVE_AHEAD_AIRPLANE);
 
@@ -80,9 +79,7 @@ export const Experience = ({curretState,setCurrentState}) => {
     angle = -Math.PI / 2 + angle;
 
     let angleDegrees = (angle * 180) / Math.PI;
-    angleDegrees *= 2.4; // stronger angle
-
-    // LIMIT PLANE ANGLE
+    angleDegrees *= 2.4;
     if (angleDegrees < 0) {
       angleDegrees = Math.max(angleDegrees, -AIRPLANE_MAX_ANGLE);
     }
@@ -90,7 +87,6 @@ export const Experience = ({curretState,setCurrentState}) => {
       angleDegrees = Math.min(angleDegrees, AIRPLANE_MAX_ANGLE);
     }
 
-    // SET BACK ANGLE
     angle = (angleDegrees * Math.PI) / 180;
 
     const targetAirplaneQuaternion = new THREE.Quaternion().setFromEuler(
@@ -101,12 +97,11 @@ export const Experience = ({curretState,setCurrentState}) => {
       )
     );
     airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
-
   });
   return (
     <>
       <group ref={cameraGroup}>
-        <CustomEffect/>
+        <CustomEffect />
         <Background />
         <PerspectiveCamera position={[0, 0, 5]} fov={30} makeDefault />
         <group ref={airplane}>

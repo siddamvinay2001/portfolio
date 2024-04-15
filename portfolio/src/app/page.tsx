@@ -10,21 +10,24 @@ import { WelcomePage } from "../components/WelcomePage";
 export default function Home() {
   const [currentState, setCurrentState] = useState(0);
   const [onPlay, setOnPlay] = useState(false);
-  console.log("Home page onPlay state: ", onPlay);
   return (
     <>
-    {onPlay && 
       <Canvas>
         <color attach="background" args={["#ececec"]} />
         <ScrollControls pages={50} damping={1}>
-          <Experience curretState={currentState} setCurrentState={setCurrentState}/>
+          <Experience
+            curretState={currentState}
+            setCurrentState={setCurrentState}
+          />
         </ScrollControls>
       </Canvas>
-    }
-    {onPlay && <TextSection currentState={currentState} setCurrentState={setCurrentState}/>}
-
-    {!onPlay &&  <WelcomePage onPlay = {onPlay} setOnPlay = {setOnPlay} />}
+      {onPlay && (
+        <TextSection
+          currentState={currentState}
+          setCurrentState={setCurrentState}
+        />
+      )}
+      {!onPlay && <WelcomePage onPlay={onPlay} setOnPlay={setOnPlay} />}
     </>
   );
 }
-

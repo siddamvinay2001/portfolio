@@ -51,15 +51,15 @@ export const CustomEffect = () => {
   const scroll = useScroll();
   const lastScroll = useRef(0);
 
-  useFrame((_state, delta)=>{
-    if(scroll.offset - lastScroll.current > 0.0005){
-        speedMaterial.current.opacity = MAX_OPACITY
+  useFrame((_state, delta) => {
+    if (scroll.offset - lastScroll.current > 0.0005) {
+      speedMaterial.current.opacity = MAX_OPACITY;
     }
     lastScroll.current = scroll.offset;
-    if(speedMaterial.current.opacity > 0){
-        speedMaterial.current.opacity -= delta * 0.2;
+    if (speedMaterial.current.opacity > 0) {
+      speedMaterial.current.opacity -= delta * 0.2;
     }
-  })
+  });
 
   return (
     <group>
