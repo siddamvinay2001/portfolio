@@ -16,12 +16,12 @@ export default function Home() {
     {onPlay && 
       <Canvas>
         <color attach="background" args={["#ececec"]} />
-        <ScrollControls pages={5} damping={0.3}>
-          <Experience />
+        <ScrollControls pages={50} damping={1}>
+          <Experience curretState={currentState} setCurrentState={setCurrentState}/>
         </ScrollControls>
       </Canvas>
     }
-    {onPlay && <TextSection />}
+    {onPlay && <TextSection currentState={currentState} setCurrentState={setCurrentState}/>}
 
     {!onPlay &&  <WelcomePage onPlay = {onPlay} setOnPlay = {setOnPlay} />}
     </>

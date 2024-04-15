@@ -5,6 +5,7 @@ import {
   PerspectiveCamera,
   useScroll,
 } from "@react-three/drei";
+import { Euler, Group, Vector3 } from "three";
 import { Background } from "./Background";
 import { Airplane } from "./Airplane";
 import {Text} from 'troika-three-text'
@@ -12,48 +13,94 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { CurveUtils } from "../utils/utils";
 import * as THREE from "three";
+import { lerp } from "three/src/math/MathUtils.js";
 
-const LINE_NB_POINTS = 10000;
+const LINE_NB_POINTS = 1000 ;
+const CURVE_AHEAD_AIRPLANE = 0.02;
+const CURVE_AHEAD_CAMERA = 0.008;
+const AIRPLANE_MAX_ANGLE = 35;
 
-export const Experience = () => {
+
+export const Experience = ({curretState,setCurrentState}) => {
   const [curve, linePoints, shape, renderClouds, renderTexts] = CurveUtils();
   const cameraGroup = useRef();
   const airplane = useRef();
   const scroll = useScroll();
   const myText = new Text()
-  
-  // Set properties to configure:
-  myText.text = 'Hello world!'
-  myText.fontSize = 0.2
-  myText.position.z = -2
-  myText.color = 0x9966FF  
 
   useFrame((_state, delta) => {
-    const curPointIndex = Math.min(
-      Math.round(scroll.offset * linePoints.length),
-      linePoints.length - 1
+
+    const scrollOffset = Math.max(0,scroll.offset);
+
+    const curPoint = curve.getPoint(scrollOffset);
+    cameraGroup.current.position.lerp(curPoint, delta * 24);
+
+    // console.log("Camergroup position: ", cameraGroup.current.position);
+     console.log("Scroll offset is: ", scrollOffset);
+
+    if(scrollOffset > 0.10 && scrollOffset < 0.11){
+      setCurrentState(1);
+    }
+    else if(scrollOffset > 0.25 && scrollOffset < 0.26){
+      setCurrentState(2);
+    }
+    else if(scrollOffset > 0.45 && scrollOffset < 0.46){
+      setCurrentState(3);
+    }
+    else if(scrollOffset > 0.65 && scrollOffset < 0.66){
+      setCurrentState(4);
+    }
+    else if(scrollOffset > 0.85 && scrollOffset < 0.86){
+      setCurrentState(5);
+    }
+
+    const lookAtPoint = curve.getPoint(Math.min(scrollOffset+CURVE_AHEAD_CAMERA,1));
+    const currentLookAt = cameraGroup.current.getWorldDirection(
+      new THREE.Vector3()
+    )
+    const targetLookAt = new THREE.Vector3().subVectors(curPoint,lookAtPoint).normalize();
+    const lookAt = currentLookAt.lerp(targetLookAt, delta * 24);
+    cameraGroup.current.lookAt(
+      cameraGroup.current.position.clone().add(lookAt)
+    )
+
+    const tangent = curve.getTangent(scrollOffset + CURVE_AHEAD_AIRPLANE);
+
+    const nonLerpLookAt = new Group();
+    nonLerpLookAt.position.copy(curPoint);
+    nonLerpLookAt.lookAt(nonLerpLookAt.position.clone().add(targetLookAt));
+
+    tangent.applyAxisAngle(
+      new THREE.Vector3(0, 1, 0),
+      -nonLerpLookAt.rotation.y
     );
-    const curPoint = linePoints[curPointIndex];
 
-    const pointAhead = linePoints[Math.min(curPointIndex + 1, linePoints.length - 1)];
+    let angle = Math.atan2(-tangent.z, tangent.x);
+    angle = -Math.PI / 2 + angle;
 
-    const xDisplacement = (pointAhead.x - curPoint.x) * 80;
+    let angleDegrees = (angle * 180) / Math.PI;
+    angleDegrees *= 2.4; // stronger angle
 
-    const angleRotation =
-      (xDisplacement < 0 ? 1 : -1) *
-      Math.min(Math.abs(xDisplacement), Math.PI / 3);
+    // LIMIT PLANE ANGLE
+    if (angleDegrees < 0) {
+      angleDegrees = Math.max(angleDegrees, -AIRPLANE_MAX_ANGLE);
+    }
+    if (angleDegrees > 0) {
+      angleDegrees = Math.min(angleDegrees, AIRPLANE_MAX_ANGLE);
+    }
+
+    // SET BACK ANGLE
+    angle = (angleDegrees * Math.PI) / 180;
 
     const targetAirplaneQuaternion = new THREE.Quaternion().setFromEuler(
       new THREE.Euler(
         airplane.current.rotation.x,
         airplane.current.rotation.y,
-        angleRotation
+        angle
       )
     );
-
     airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
 
-    cameraGroup.current.position.lerp(curPoint, delta * 24);
   });
   return (
     <>

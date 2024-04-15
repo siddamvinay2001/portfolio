@@ -1,54 +1,58 @@
-import { useMemo } from "react";
-import { Vector3 } from "three"; // Import Vector3
-
-import * as THREE from "three";
-const LINE_NB_POINTS = 10000;
-const CURVE_DISTANCE = 250;
-
-export const TextSection = ({currentState, setCurrentState}) => {
-  const texts = [];
+export const TextSection = ({ currentState, setCurrentState }) => {
   const textConfigs = [
+    {
+      id: 0,
+      title: "Welcome explorer",
+      description: ["Scroll to begin the journey"],
+    },
     {
       id: 1,
       title: "Work Experience",
-      description: "IC2",
+      description: ["IC2"],
     },
     {
       id: 2,
-      title: "Skills",
-      description: "HTML,CSS",
+      title: "Education",
+      description: ["IC2"],
     },
     {
       id: 3,
       title: "Projects",
-      subtitle: "Our flight attendants will help you have a great journey",
+      description: ["HTML,CSS"],
     },
     {
       id: 4,
-      title: "Movies",
-      subtitle: "We provide a large selection of media...",
+      title: "Skills",
+      description: ["Our flight attendants will help you have a great journey"],
+    },
+    {
+      id: 5,
+      title: "Contact",
+      description: ["We provide a large selection of media..."],
     },
   ];
 
+  const title = currentState > -1 ? textConfigs[currentState].title : "";
+  const description =
+    currentState > -1 ? textConfigs[currentState].description : "";
+
   return (
-    <div>
-      {textConfigs.map((config, index) => (
-        <div
-          key={`text-${index}`}
-          className="absolute text-black text-sm bg-white shadow-lg rounded-lg p-4 max-w-xs"
-          style={{
-            fontSize: "0.3rem",
-            lineHeight: "1.5",
-            left: `50%`, // Center horizontally on the screen
-            top: `50%`, // Center vertically on the screen
-            transform: `translate3d(${config.position.x}px, ${config.position.y}px, ${config.position.z}px)`, // Use translate3d for 3D positioning
-          }}
-        >
-          <div className="font-bold">{config.title}</div>
-          {config.description && <div>{config.description}</div>}
-          {config.subtitle && <div>{config.subtitle}</div>}
+    <div className="absolute top-28 left-0 right-0 z-10 flex flex-col items-center  justify-center">
+      {currentState > -1 && (
+        <div className="text-center py-4 px-8 bg-white max-w-3/5 font-serif text-black rounded-md">
+          {title.length > 0 && <div>{title}</div>}
+          {description.length > 0 &&
+            description.map((sentence, index) => (
+              <div key={index}>{sentence}</div>
+            ))}
+          <button
+            className="mt-3 w-8 h-8 text-sm text-red-200 bg-red-500 rounded-lg"
+            onClick={() => setCurrentState(-1)}
+          >
+            X
+          </button>
         </div>
-      ))}
+      )}
     </div>
   );
 };
