@@ -13,6 +13,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { CurveUtils } from "../utils/utils";
 import * as THREE from "three";
+import {CustomEffect} from './Effects'
 import { lerp } from "three/src/math/MathUtils.js";
 
 const LINE_NB_POINTS = 1000 ;
@@ -38,19 +39,19 @@ export const Experience = ({curretState,setCurrentState}) => {
     // console.log("Camergroup position: ", cameraGroup.current.position);
      console.log("Scroll offset is: ", scrollOffset);
 
-    if(scrollOffset > 0.10 && scrollOffset < 0.11){
+    if(scrollOffset > 0.15 && scrollOffset < 0.16){
       setCurrentState(1);
     }
-    else if(scrollOffset > 0.25 && scrollOffset < 0.26){
+    else if(scrollOffset > 0.30 && scrollOffset < 0.31){
       setCurrentState(2);
     }
-    else if(scrollOffset > 0.45 && scrollOffset < 0.46){
+    else if(scrollOffset > 0.50 && scrollOffset < 0.51){
       setCurrentState(3);
     }
-    else if(scrollOffset > 0.65 && scrollOffset < 0.66){
+    else if(scrollOffset > 0.70 && scrollOffset < 0.71){
       setCurrentState(4);
     }
-    else if(scrollOffset > 0.85 && scrollOffset < 0.86){
+    else if(scrollOffset > 0.86 && scrollOffset < 0.87){
       setCurrentState(5);
     }
 
@@ -105,6 +106,7 @@ export const Experience = ({curretState,setCurrentState}) => {
   return (
     <>
       <group ref={cameraGroup}>
+        <CustomEffect/>
         <Background />
         <PerspectiveCamera position={[0, 0, 5]} fov={30} makeDefault />
         <group ref={airplane}>

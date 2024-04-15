@@ -159,6 +159,15 @@ export const CurveUtils = () => {
       },
       // FOURTH POINT
       {
+        scale: new Vector3(3, 3, 3),
+        position: new Vector3(
+          curvePoints[4].x + 1,
+          curvePoints[4].y - 5,
+          curvePoints[4].z + 10
+        ),
+        rotation: new Euler(Math.PI / 3, 0, Math.PI / 3),
+      },
+      {
         scale: new Vector3(2, 2, 2),
         position: new Vector3(
           curvePoints[4].x + 3,
@@ -185,6 +194,42 @@ export const CurveUtils = () => {
         rotation: new Euler(Math.PI / 3, 0, Math.PI / 3),
       },
       // FINAL
+      {
+        scale: new Vector3(3, 3, 3),
+        position: new Vector3(
+          curvePoints[5].x + 4,
+          curvePoints[5].y - 5,
+          curvePoints[5].z - 10
+        ),
+        rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
+      },
+      {
+        scale: new Vector3(3, 3, 3),
+        position: new Vector3(
+          curvePoints[6].x - 5,
+          curvePoints[6].y + 2,
+          curvePoints[6].z + 20
+        ),
+        rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
+      },
+      {
+        scale: new Vector3(3, 3, 3),
+        position: new Vector3(
+          curvePoints[7].x + 3,
+          curvePoints[7].y - 2,
+          curvePoints[7].z - 50
+        ),
+        rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
+      },
+      {
+        scale: new Vector3(3, 3, 3),
+        position: new Vector3(
+          curvePoints[7].x + 6,
+          curvePoints[7].y - 5,
+          curvePoints[7].z - 30
+        ),
+        rotation: new Euler(-Math.PI / 4, -Math.PI / 6, 0),
+      },
       {
         scale: new Vector3(3, 3, 3),
         position: new Vector3(
