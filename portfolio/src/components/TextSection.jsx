@@ -50,7 +50,7 @@ export const TextSection = ({ currentState, setCurrentState }) => {
   return (
     <div className="absolute top-20 left-0 max-h-[80%] right-0 z-10 flex flex-col items-center mb-20  justify-center">
       {currentState > -1 && (
-        <div className="text-center py-4 px-8 overflow-y-auto bg-white max-w-3/5  font-serif text-black rounded-md">
+        <div className="text-center py-4 px-8 overflow-y-auto bg-white max-w-3/5  font-serif text-black rounded-lg">
           {title.length > 0 && <div className="text-lg">{title}</div>}
           {description.length > 0 && (
             <div className="text-md text-left mt-3">
