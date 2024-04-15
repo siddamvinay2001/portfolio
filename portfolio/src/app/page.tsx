@@ -27,7 +27,7 @@ export default function Home() {
           setCurrentState={setCurrentState}
         />
       )}
-      {!onPlay && <WelcomePage onPlay={onPlay} setOnPlay={setOnPlay} />}
+       <WelcomePage onPlay={onPlay} setOnPlay={setOnPlay} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 export const WelcomePage = ({ onPlay, setOnPlay }) => {
   return (
-    <div className="overlay">
+    <div className={`overlay ${onPlay ? "opacity-0 w-0 h-0" : ""}`}>
       <div className="intro">
         <h1 className="logo">Siddam Vinay</h1>
         <h1 className="message">
@@ -10,7 +10,6 @@ export const WelcomePage = ({ onPlay, setOnPlay }) => {
           className="explore"
           onClick={() => {
             setOnPlay(!onPlay);
-            console.log("Button clicked! New onPlay state:", !onPlay);
           }}
         >
           Explore
