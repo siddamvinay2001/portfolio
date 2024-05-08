@@ -48,9 +48,10 @@ export const TextSection = ({ currentState, setCurrentState }) => {
     currentState > -1 ? textConfigs[currentState].description : "";
 
   return (
-    <div className="absolute top-20 left-20 right-0 max-h-[80%] max-w-[80%] z-10 items-center mb-20 flex flex-col justify-center">
+    <div className="absolute top-20 z-10 w-full flex justify-around	">
+    <div className="max-h-[80%] max-w-[80%] flex flex-col justify-center">
       {currentState > -1 && (
-        <div className="text-center py-4 px-8 overflow-y-auto bg-white max-w-3/5 font-serif text-black rounded-lg">
+        <div className="text-center left-[50%] py-4 px-8 overflow-y-auto bg-white max-w-3/5 font-serif text-black rounded-lg">
           {title.length > 0 && <div className="text-lg font-bold">{title}</div>}
           {description.length > 0 && (
             <div className="text-md text-left mt-3">
@@ -89,6 +90,7 @@ export const TextSection = ({ currentState, setCurrentState }) => {
           </button>
         </div>
       )}
+    </div>
     </div>
   );
 };
